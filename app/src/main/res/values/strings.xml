@@ -2,6 +2,8 @@
     <string name="app_name">PRM391_Asm4</string>
     <string name="movies_text">Movies</string>
     <string name="profile_text">Profile</string>
+    <string name="signOut_text">Sign out</string>
+    <string name="moves_list_text">Your Movies List</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

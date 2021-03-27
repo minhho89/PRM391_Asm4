@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.fragment,
                         new MoviesFragment())
                 .commit();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
