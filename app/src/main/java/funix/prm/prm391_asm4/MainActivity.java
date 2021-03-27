@@ -3,14 +3,19 @@ package funix.prm.prm391_asm4;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNav;
+    Intent receiveIntent;
+    String mImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +25,16 @@ public class MainActivity extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
+        mImageUrl = getIntent().getExtras().getString("imageURL", "");
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment,
                         new MoviesFragment())
                 .commit();
+
+
+
 
     }
 
@@ -38,7 +48,14 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new MoviesFragment();
                             break;
                         case R.id.botNav_profile:
+                            mImageUrl = getIntent().getExtras().getString("imageURL", "");
+                            Bundle b = new Bundle();
+                            b.putString("image_url", mImageUrl);
+
+
                             selectedFragment = new ProfileFragment();
+                            selectedFragment.setArguments(b);
+                            Toast.makeText(MainActivity.this, mImageUrl, Toast.LENGTH_SHORT).show();
                             break;
                     }
 

@@ -1,5 +1,6 @@
 package funix.prm.prm391_asm4;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,14 +81,26 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getActivity().setTitle(R.string.profile_text);
-
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        ImageView profileImg = rootView.findViewById(R.id.profile_image);
+
+        Bundle bundle = this.getArguments();
+        String imageURL = bundle.getString("image_url");
+        if (imageURL != "" || imageURL != null) {
+            Picasso.get().load(imageURL).into(profileImg);
+
+        }
+
+
+
+
         return rootView;
     }
 }
