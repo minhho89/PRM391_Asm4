@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     Intent receiveIntent;
     String mImageUrl;
     String mUserName;
+    String mBirthday;
+    String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         mImageUrl = getIntent().getExtras().getString("imageURL", "");
         mUserName = getIntent().getExtras().getString("name", "");
+//        mBirthday = getIntent().getExtras().getString("birthday", "");
+        mEmail = getIntent().getExtras().getString("email", "");
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -52,9 +56,15 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.botNav_profile:
                             mImageUrl = getIntent().getExtras().getString("imageURL", "");
                             mUserName = getIntent().getExtras().getString("name", "");
+//                            mBirthday = getIntent().getExtras().getString("birthday", "");
+                            mEmail = getIntent().getExtras().getString("email", "");
+
                             Bundle b = new Bundle();
                             b.putString("image_url", mImageUrl);
                             b.putString("user_name", mUserName);
+//                            b.putString("user_birthday", mBirthday);
+                            b.putString("user_email", mEmail);
+
 
                             selectedFragment = new ProfileFragment();
                             selectedFragment.setArguments(b);

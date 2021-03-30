@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileFragment#newInstance} factory method to
@@ -92,6 +94,7 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ImageView profileImg = rootView.findViewById(R.id.profile_image);
         TextView userNameTxt = rootView.findViewById(R.id.profile_name_txt);
+        TextView emailTxt = rootView.findViewById(R.id.profile_email_txt);
 
         Bundle bundle = this.getArguments();
         String imageURL = bundle.getString("image_url");
@@ -102,10 +105,10 @@ public class ProfileFragment extends Fragment {
         if (userName != "" || userName != "") {
             userNameTxt.setText(userName);
         }
-
-
-
-
+        String email = bundle.getString("user_email");
+        if (email != "" || email != null) {
+            emailTxt.setText(email);
+        }
         return rootView;
     }
 }

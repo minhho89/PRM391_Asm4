@@ -18,6 +18,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.internal.ImageRequest;
+
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -25,6 +27,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,7 +37,10 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private String mImageUrl = "";
     private String mUserName = "";
+    private String mBirthday = "";
+    private String mEmail = "";
     private Profile mProfile;
+
 
 
     @Override
@@ -51,18 +58,42 @@ public class LoginActivity extends AppCompatActivity {
         mFbBtn = findViewById(R.id.fb_login_button);
         mCallbackManager = CallbackManager.Factory.create();
 
+        mFbBtn.setPermissions(Arrays.asList("public_profile", "email"));
 
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        mFbBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 mProfile = Profile.getCurrentProfile();
                 mUserName = mProfile.getName();
-
                 // Get profile picture URL
                 mImageUrl = "https://graph.facebook.com/"
                         + loginResult.getAccessToken().getUserId()
-                        + "/picture?width=300&height=300";
+                        + "/picture?width=400&height=400";
 
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                try {
+                                    String obj = object.toString(); // get JSON reference
+                                    mEmail = object.getString("email");
+//
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                );
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "email");//set these parameter
+                request.setParameters(parameters);
+                request.executeAsync(); //exuecute task in seprate thread
+
+
+                Toast.makeText(getApplicationContext(), "Logging in...", Toast.LENGTH_SHORT).show();
                 moveToMainActivity();
             }
 
@@ -78,13 +109,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void moveToMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("imageURL", mImageUrl);
         intent.putExtra("name", mUserName);
+        intent.putExtra("email", mEmail);
+
         startActivity(intent);
     }
 }
