@@ -16,6 +16,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -31,7 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton mFbBtn;
     private CallbackManager mCallbackManager;
     private String mImageUrl = "";
-    private String mUserName;
+    private String mUserName = "";
+    private Profile mProfile;
 
 
     @Override
@@ -49,9 +51,14 @@ public class LoginActivity extends AppCompatActivity {
         mFbBtn = findViewById(R.id.fb_login_button);
         mCallbackManager = CallbackManager.Factory.create();
 
+
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                mProfile = Profile.getCurrentProfile();
+                mUserName = mProfile.getName();
+
+                // Get profile picture URL
                 mImageUrl = "https://graph.facebook.com/"
                         + loginResult.getAccessToken().getUserId()
                         + "/picture?width=300&height=300";
@@ -77,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
     private void moveToMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("imageURL", mImageUrl);
+        intent.putExtra("name", mUserName);
         startActivity(intent);
     }
 }
