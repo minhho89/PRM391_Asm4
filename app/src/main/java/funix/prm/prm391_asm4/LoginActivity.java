@@ -55,11 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                 mImageUrl = "https://graph.facebook.com/"
                         + loginResult.getAccessToken().getUserId()
                         + "/picture?width=300&height=300";
-//                info.setText("User Id: " + loginResult.getAccessToken().getUserId());
-//                String imageURL = "https://graph.facebook.com/"
-//                        + loginResult.getAccessToken().getUserId()
-//                        + "/picture?width=300&height=300";
-//                Picasso.get().load(imageURL).into(profile);
+
                 moveToMainActivity();
             }
 
