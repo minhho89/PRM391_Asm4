@@ -34,22 +34,25 @@ public class MainActivity extends AppCompatActivity {
 
         mPref = getApplication().getSharedPreferences("Options", Context.MODE_PRIVATE);
 
-        String id = mPref.getString("id","");
-        mImageUrl = mPref.getString("imageURL", "no url");
-        mUserName =mPref.getString("name", "");
-        mEmail = mPref.getString("email", "");
+//        String id = mPref.getString("id","");
+//        mImageUrl = mPref.getString("imageURL", "no url");
+//        mUserName =mPref.getString("name", "");
+//        mEmail = mPref.getString("email", "");
 //        mLink = mPref.getString("link", "");
 
 //        mImageUrl = getIntent().getExtras().getString("imageURL", "");
 //        mUserName = getIntent().getExtras().getString("name", "");
 ////        mBirthday = getIntent().getExtras().getString("birthday", "");
 //        mEmail = getIntent().getExtras().getString("email", "");
+
+
+
         // TODO: delete
-        Log.d("Main Activity: ", "___________");
-        Log.d("Main Activity: ", mImageUrl);
-        Log.d("Main Activity: ", mPref.getString("id","no id"));
-        Log.d("Main Activity: ", mPref.getString("name", ""));
-        Log.d("Main Activity: ", mPref.getString("email", ""));
+//        Log.d("Main Activity: ", "___________");
+//        Log.d("Main Activity: ", mImageUrl);
+//        Log.d("Main Activity: ", mPref.getString("id","no id"));
+//        Log.d("Main Activity: ", mPref.getString("name", ""));
+//        Log.d("Main Activity: ", mPref.getString("email", ""));
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -77,12 +80,16 @@ public class MainActivity extends AppCompatActivity {
 //                            Toast.makeText(MainActivity.this, "MainActivity " + mEmail, Toast.LENGTH_SHORT).show();
 //                            mLink = getIntent().getExtras().getString("link", "");
 
-                            Bundle b = new Bundle();
-                            b.putString("image_url", mImageUrl);
-                            b.putString("user_name", mUserName);
-//                            b.putString("user_birthday", mBirthday);
-                            b.putString("user_email", mEmail);
-                            b.putString("user_link", mLink);
+//                            Bundle b = new Bundle();
+//                            b.putString("image_url", mImageUrl);
+//                            b.putString("user_name", mUserName);
+////                            b.putString("user_birthday", mBirthday);
+//                            b.putString("user_email", mEmail);
+//                            b.putString("user_link", mLink);
+//
+
+                            Intent intent = getIntent();
+                            Bundle b = intent.getExtras();
 
                             selectedFragment = new ProfileFragment();
                             selectedFragment.setArguments(b);

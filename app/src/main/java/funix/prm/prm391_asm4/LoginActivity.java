@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Bundle b = new Bundle();
 
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -72,6 +73,8 @@ public class LoginActivity extends AppCompatActivity {
                             mImageUrl = "https://graph.facebook.com/"
                                     + AccessToken.getCurrentAccessToken().getUserId()
                                     + "/picture?width=400&height=400";
+
+
 
 
                             mEmail = object.getString("email");
@@ -87,6 +90,13 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("name", mUserName);
                             editor.putString("email", mEmail);
 
+
+                            b.putString("id", mId);
+                            b.putString("imageURL", mImageUrl);
+                            b.putString("name", mUserName);
+                            b.putString("email", mEmail);
+
+                            intent.putExtras(b);
                             startActivity(intent);
 
                         } catch (JSONException e) {
@@ -95,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-        Bundle b = new Bundle();
+
         b.putString("fields", "id,name,email");
 
         request.setParameters(b);
