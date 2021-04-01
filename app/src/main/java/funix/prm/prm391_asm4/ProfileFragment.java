@@ -14,9 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,17 +93,30 @@ public class ProfileFragment extends Fragment {
         getActivity().setTitle(R.string.profile_text);
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ImageView profileImg = rootView.findViewById(R.id.profile_image);
+        TextView userNameTxt = rootView.findViewById(R.id.profile_name_txt);
+        TextView emailTxt = rootView.findViewById(R.id.profile_email_txt);
+        TextView linkTxt = rootView.findViewById(R.id.profile_dob_txt);
 
         Bundle bundle = this.getArguments();
         String imageURL = bundle.getString("image_url");
         if (imageURL != "" || imageURL != null) {
             Picasso.get().load(imageURL).into(profileImg);
-
         }
+        String userName = bundle.getString("user_name");
+        if (userName != "" || userName != "") {
+            userNameTxt.setText(userName);
+        }
+        String email = bundle.getString("email");
+        Toast.makeText(getContext(), email, Toast.LENGTH_SHORT).show();
+        if (email != "" || email != null) {
+            emailTxt.setText(email);
+        }
+        String link = bundle.getString("user_email");
 
+        if (link != "" || link != null) {
 
-
-
+            linkTxt.setText(link);
+        }
         return rootView;
     }
 }
