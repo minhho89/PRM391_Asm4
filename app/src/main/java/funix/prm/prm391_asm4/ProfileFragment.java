@@ -1,6 +1,8 @@
 package funix.prm.prm391_asm4;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
