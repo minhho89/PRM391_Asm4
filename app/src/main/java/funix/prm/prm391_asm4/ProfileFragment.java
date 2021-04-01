@@ -95,6 +95,7 @@ public class ProfileFragment extends Fragment {
         ImageView profileImg = rootView.findViewById(R.id.profile_image);
         TextView userNameTxt = rootView.findViewById(R.id.profile_name_txt);
         TextView emailTxt = rootView.findViewById(R.id.profile_email_txt);
+        TextView linkTxt = rootView.findViewById(R.id.profile_dob_txt);
 
         Bundle bundle = this.getArguments();
         String imageURL = bundle.getString("image_url");
@@ -105,9 +106,16 @@ public class ProfileFragment extends Fragment {
         if (userName != "" || userName != "") {
             userNameTxt.setText(userName);
         }
-        String email = bundle.getString("user_email");
+        String email = bundle.getString("email");
+        Toast.makeText(getContext(), email, Toast.LENGTH_SHORT).show();
         if (email != "" || email != null) {
             emailTxt.setText(email);
+        }
+        String link = bundle.getString("user_email");
+
+        if (link != "" || link != null) {
+
+            linkTxt.setText(link);
         }
         return rootView;
     }

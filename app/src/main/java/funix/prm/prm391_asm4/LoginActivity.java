@@ -16,6 +16,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.internal.ImageRequest;
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mUserName = "";
     private String mBirthday = "";
     private String mEmail = "";
+    private String mLink = "";
     private Profile mProfile;
 
 
@@ -60,16 +62,9 @@ public class LoginActivity extends AppCompatActivity {
 
         mFbBtn.setPermissions(Arrays.asList("public_profile", "email"));
 
-        mFbBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                mProfile = Profile.getCurrentProfile();
-                mUserName = mProfile.getName();
-                // Get profile picture URL
-                mImageUrl = "https://graph.facebook.com/"
-                        + loginResult.getAccessToken().getUserId()
-                        + "/picture?width=400&height=400";
-
 
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
@@ -77,24 +72,36 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 try {
-                                    String obj = object.toString(); // get JSON reference
                                     mEmail = object.getString("email");
-//
+
+                                    Toast.makeText(getApplicationContext(), "Request " + mEmail, Toast.LENGTH_SHORT).show();
+                                    mLink = object.getString("link");
+                                    Toast.makeText(getApplicationContext(), mLink, Toast.LENGTH_SHORT).show();
+
+                                    mProfile = Profile.getCurrentProfile();
+                                    mUserName = mProfile.getName();
+                                    // Get profile picture URL
+                                    mImageUrl = "https://graph.facebook.com/"
+                                            + loginResult.getAccessToken().getUserId()
+                                            + "/picture?width=400&height=400";
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
-                        }
-                );
+                        });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "email");//set these parameter
+                parameters.putString("fields", "email, link");//set these parameter
+                Toast.makeText(getApplicationContext(), "Request put " + mEmail, Toast.LENGTH_SHORT).show();
                 request.setParameters(parameters);
                 request.executeAsync(); //exuecute task in seprate thread
 
+                Toast.makeText(getApplicationContext(), "Logging in..." + " email: " + mEmail, Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(getApplicationContext(), "Logging in...", Toast.LENGTH_SHORT).show();
+
                 moveToMainActivity();
+
             }
 
             @Override
@@ -111,11 +118,18 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
     private void moveToMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("imageURL", mImageUrl);
         intent.putExtra("name", mUserName);
-        intent.putExtra("email", mEmail);
+
+        Bundle b = new Bundle();
+
+        intent.putExtra("email", b.getBundle("email"));
+        //TODO: delete
+        Toast.makeText(getApplicationContext(), "thanh cong put email " + mEmail, Toast.LENGTH_SHORT).show();
+        intent.putExtra("link", mLink);
 
         startActivity(intent);
     }

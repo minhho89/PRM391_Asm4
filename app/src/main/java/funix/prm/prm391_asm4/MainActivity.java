@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Intent receiveIntent;
     String mImageUrl;
     String mUserName;
-    String mBirthday;
+    String mLink;
     String mEmail;
 
     @Override
@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         mUserName = getIntent().getExtras().getString("name", "");
 //        mBirthday = getIntent().getExtras().getString("birthday", "");
         mEmail = getIntent().getExtras().getString("email", "");
+        // TODO: delete
+        Toast.makeText(getApplicationContext(), "MainActivity OnCreated " + mEmail, Toast.LENGTH_SHORT).show();
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -57,14 +59,17 @@ public class MainActivity extends AppCompatActivity {
                             mImageUrl = getIntent().getExtras().getString("imageURL", "");
                             mUserName = getIntent().getExtras().getString("name", "");
 //                            mBirthday = getIntent().getExtras().getString("birthday", "");
-                            mEmail = getIntent().getExtras().getString("email", "");
+                            mEmail = getIntent().getExtras().getString("email1", "");
+                            //TODO: delete
+                            Toast.makeText(MainActivity.this, "MainActivity " + mEmail, Toast.LENGTH_SHORT).show();
+                            mLink = getIntent().getExtras().getString("link", "");
 
                             Bundle b = new Bundle();
                             b.putString("image_url", mImageUrl);
                             b.putString("user_name", mUserName);
 //                            b.putString("user_birthday", mBirthday);
                             b.putString("user_email", mEmail);
-
+                            b.putString("link", mLink);
 
                             selectedFragment = new ProfileFragment();
                             selectedFragment.setArguments(b);
