@@ -1,6 +1,7 @@
 package funix.prm.prm391_asm4;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -95,7 +96,7 @@ public class ProfileFragment extends Fragment {
         ImageView profileImg = rootView.findViewById(R.id.profile_image);
         TextView userNameTxt = rootView.findViewById(R.id.profile_name_txt);
         TextView emailTxt = rootView.findViewById(R.id.profile_email_txt);
-        TextView linkTxt = rootView.findViewById(R.id.profile_dob_txt);
+        TextView idTxt = rootView.findViewById(R.id.profile_id_txt);
 
         Bundle bundle = this.getArguments();
 //        String imageURL = bundle.getString("image_url");
@@ -103,17 +104,20 @@ public class ProfileFragment extends Fragment {
         String imageURL = bundle.getString("imageURL");
         if (imageURL != "" || imageURL != null) {
             Picasso.get().load(imageURL).into(profileImg);
+
         }
         String userName = bundle.getString("name");
         if (userName != "" || userName != "") {
             userNameTxt.setText(userName);
         }
         String email = bundle.getString("email");
-        Toast.makeText(getContext(), email, Toast.LENGTH_SHORT).show();
         if (email != "" || email != null) {
-            emailTxt.setText(email);
+            emailTxt.setText("Email: " +  email);
         }
-
+        String id = bundle.getString("id");
+        if (id != "" || id != null) {
+            idTxt.setText("User ID: " + id);
+        }
         return rootView;
     }
 }
