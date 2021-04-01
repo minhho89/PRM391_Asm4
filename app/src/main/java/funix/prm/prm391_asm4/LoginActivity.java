@@ -1,15 +1,19 @@
 package funix.prm.prm391_asm4;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -37,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton mFbBtn;
     private CallbackManager mCallbackManager;
     private String mImageUrl = "";
+    private String mId = "";
     private String mUserName = "";
     private String mBirthday = "";
     private String mEmail = "";
@@ -49,6 +54,62 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+
+        SharedPreferences sharedPref = getApplicationContext()
+                .getSharedPreferences("Options", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try {
+                            mId = object.getString("id");
+                            mUserName = object.getString("name");
+                            mImageUrl = "https://graph.facebook.com/"
+                                    + AccessToken.getCurrentAccessToken().getUserId()
+                                    + "/picture?width=400&height=400";
+
+
+                            mEmail = object.getString("email");
+                            Toast.makeText(getApplicationContext(), "Request " + object.toString(), Toast.LENGTH_SHORT).show();
+//                            mLink = object.getString("link");
+//                            Toast.makeText(getApplicationContext(), mLink, Toast.LENGTH_SHORT).show();
+
+                            editor.putString("id", mId);
+                            Log.d("demo", "onCompleted: " + mId);
+
+                            editor.putString("imageURL", mImageUrl);
+                            Log.d("demo", "onCompleted: url " + mImageUrl);
+                            editor.putString("name", mUserName);
+                            editor.putString("email", mEmail);
+
+                            startActivity(intent);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        Bundle b = new Bundle();
+        b.putString("fields", "id,name,email");
+
+        request.setParameters(b);
+        request.executeAsync();
+
+        editor.commit();
+
+
+//                intent.putExtra("imageURL", mImageUrl);
+//                intent.putExtra("name", mUserName);
+//                intent.putExtra("email", mEmail);
+//                intent.putExtra("link", mLink);
+//
+
     }
 
     @Override
@@ -65,43 +126,12 @@ public class LoginActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-                GraphRequest request = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                try {
-                                    mEmail = object.getString("email");
-
-                                    Toast.makeText(getApplicationContext(), "Request " + mEmail, Toast.LENGTH_SHORT).show();
-                                    mLink = object.getString("link");
-                                    Toast.makeText(getApplicationContext(), mLink, Toast.LENGTH_SHORT).show();
-
-                                    mProfile = Profile.getCurrentProfile();
-                                    mUserName = mProfile.getName();
-                                    // Get profile picture URL
-                                    mImageUrl = "https://graph.facebook.com/"
-                                            + loginResult.getAccessToken().getUserId()
-                                            + "/picture?width=400&height=400";
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "email, link");//set these parameter
-                Toast.makeText(getApplicationContext(), "Request put " + mEmail, Toast.LENGTH_SHORT).show();
-                request.setParameters(parameters);
-                request.executeAsync(); //exuecute task in seprate thread
-
-                Toast.makeText(getApplicationContext(), "Logging in..." + " email: " + mEmail, Toast.LENGTH_SHORT).show();
-
-
-                moveToMainActivity();
-
+//                mProfile = Profile.getCurrentProfile();
+//                mUserName = mProfile.getName();
+                // Get profile picture URL
+//                mImageUrl = "https://graph.facebook.com/"
+//                        + loginResult.getAccessToken().getUserId()
+//                        + "/picture?width=400&height=400";
             }
 
             @Override

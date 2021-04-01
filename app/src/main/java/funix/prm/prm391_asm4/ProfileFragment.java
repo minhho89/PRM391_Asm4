@@ -100,18 +100,18 @@ public class ProfileFragment extends Fragment {
         Bundle bundle = this.getArguments();
         String imageURL = bundle.getString("image_url");
         if (imageURL != "" || imageURL != null) {
-            Picasso.get().load(imageURL).into(profileImg);
+//            Picasso.get().load(imageURL).into(profileImg);
         }
         String userName = bundle.getString("user_name");
         if (userName != "" || userName != "") {
             userNameTxt.setText(userName);
         }
-        String email = bundle.getString("email");
+        String email = bundle.getString("user_email");
         Toast.makeText(getContext(), email, Toast.LENGTH_SHORT).show();
         if (email != "" || email != null) {
             emailTxt.setText(email);
         }
-        String link = bundle.getString("user_email");
+        String link = bundle.getString("user_link");
 
         if (link != "" || link != null) {
 
