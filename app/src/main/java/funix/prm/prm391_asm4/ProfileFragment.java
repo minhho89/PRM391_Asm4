@@ -114,8 +114,8 @@ public class ProfileFragment extends Fragment {
 
             Picasso.get().load(personPhoto).into(mProfileImg);
             mUserNameTxt.setText(personName);
-            mEmailTxt.setText("Email " + personEmail);
-            mIdTxt.setText("User Id" + personId);
+            mEmailTxt.setText("Email: " + personEmail);
+            mIdTxt.setText("User Id: " + personId);
 
             Log.d("GOOGLE", "onCreateView: email: " + personEmail);
 
