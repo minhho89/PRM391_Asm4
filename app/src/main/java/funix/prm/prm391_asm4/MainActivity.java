@@ -1,18 +1,26 @@
 package funix.prm.prm391_asm4;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,45 +32,7 @@ public class MainActivity extends AppCompatActivity {
     String mEmail;
     SharedPreferences mPref;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        bottomNav = findViewById(R.id.bottomNavigationView);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
-
-        mPref = getApplication().getSharedPreferences("Options", Context.MODE_PRIVATE);
-
-//        String id = mPref.getString("id","");
-//        mImageUrl = mPref.getString("imageURL", "no url");
-//        mUserName =mPref.getString("name", "");
-//        mEmail = mPref.getString("email", "");
-//        mLink = mPref.getString("link", "");
-
-//        mImageUrl = getIntent().getExtras().getString("imageURL", "");
-//        mUserName = getIntent().getExtras().getString("name", "");
-////        mBirthday = getIntent().getExtras().getString("birthday", "");
-//        mEmail = getIntent().getExtras().getString("email", "");
-
-
-
-        // TODO: delete
-//        Log.d("Main Activity: ", "___________");
-//        Log.d("Main Activity: ", mImageUrl);
-//        Log.d("Main Activity: ", mPref.getString("id","no id"));
-//        Log.d("Main Activity: ", mPref.getString("name", ""));
-//        Log.d("Main Activity: ", mPref.getString("email", ""));
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment,
-                        new MoviesFragment())
-                .commit();
-
-    }
-
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+    private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -72,22 +42,6 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new MoviesFragment();
                             break;
                         case R.id.botNav_profile:
-//                            mImageUrl = getIntent().getExtras().getString("imageURL", "");
-//                            mUserName = getIntent().getExtras().getString("name", "");
-////                            mBirthday = getIntent().getExtras().getString("birthday", "");
-//                            mEmail = getIntent().getExtras().getString("email1", "");
-//                            //TODO: delete
-//                            Toast.makeText(MainActivity.this, "MainActivity " + mEmail, Toast.LENGTH_SHORT).show();
-//                            mLink = getIntent().getExtras().getString("link", "");
-
-//                            Bundle b = new Bundle();
-//                            b.putString("image_url", mImageUrl);
-//                            b.putString("user_name", mUserName);
-////                            b.putString("user_birthday", mBirthday);
-//                            b.putString("user_email", mEmail);
-//                            b.putString("user_link", mLink);
-//
-
                             Intent intent = getIntent();
                             Bundle b = intent.getExtras();
 
@@ -105,5 +59,87 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
+        mPref = getApplication().getSharedPreferences("Options", Context.MODE_PRIVATE);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment,
+                        new MoviesFragment())
+                .commit();
+
+        // Facebook
+
+        // Google
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.singOut:
+                logoutGoogle();
+                logoutFacebook();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logoutFacebook() {
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(),
+                "/me/permissions/",
+                null,
+                HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+                Log.d("MainActivity", "onComplete: Facebook Sign out");
+
+            }
+        }).executeAsync();
+    }
+
+    private void moveToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void logoutGoogle() {
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        if (GoogleSignIn.getClient(this, gso) != null) {
+
+            GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("MainActivity", "onComplete: Google Sign out");
+                            moveToLoginActivity();
+                        }
+                    });
+        }
+    }
 
 }

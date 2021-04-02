@@ -1,15 +1,8 @@
 package funix.prm.prm391_asm4;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,9 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +29,15 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+
+    View mRootView;
+    ImageView mProfileImg;
+    TextView mUserNameTxt;
+    TextView mEmailTxt;
+    TextView mIdTxt;
+
+    private GoogleApiClient mGoogleApiClient;
+    private GoogleSignInOptions mGso;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -94,32 +102,56 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getActivity().setTitle(R.string.profile_text);
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-        ImageView profileImg = rootView.findViewById(R.id.profile_image);
-        TextView userNameTxt = rootView.findViewById(R.id.profile_name_txt);
-        TextView emailTxt = rootView.findViewById(R.id.profile_email_txt);
-        TextView idTxt = rootView.findViewById(R.id.profile_id_txt);
+        mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        mProfileImg = mRootView.findViewById(R.id.profile_image);
+        mUserNameTxt = mRootView.findViewById(R.id.profile_name_txt);
+        mEmailTxt = mRootView.findViewById(R.id.profile_email_txt);
+        mIdTxt = mRootView.findViewById(R.id.profile_id_txt);
 
-        Bundle bundle = this.getArguments();
-//        String imageURL = bundle.getString("image_url");
 
-        String imageURL = bundle.getString("imageURL");
-        if (imageURL != "" || imageURL != null) {
-            Picasso.get().load(imageURL).into(profileImg);
+        // Google
 
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+
+            Picasso.get().load(personPhoto).into(mProfileImg);
+            mUserNameTxt.setText(personName);
+            mEmailTxt.setText("Email " + personEmail);
+            mIdTxt.setText("User Id" + personId);
+
+
+            Log.d("GOOGLE", "onCreateView: email: " + personEmail);
+        } else {
+            // Facebook
+            // Facebook
+            Bundle bundle = this.getArguments();
+
+            String imageURL = bundle.getString("imageURL");
+            if (imageURL != "" || imageURL != null) {
+                Picasso.get().load(imageURL).into(mProfileImg);
+
+            }
+            String userName = bundle.getString("name");
+            if (userName != "" || userName != "") {
+                mUserNameTxt.setText(userName);
+            }
+            String email = bundle.getString("email");
+            if (email != "" || email != null) {
+                mEmailTxt.setText("Email: " + email);
+            }
+            String id = bundle.getString("id");
+            if (id != "" || id != null) {
+                mIdTxt.setText("User ID: " + id);
+            }
         }
-        String userName = bundle.getString("name");
-        if (userName != "" || userName != "") {
-            userNameTxt.setText(userName);
-        }
-        String email = bundle.getString("email");
-        if (email != "" || email != null) {
-            emailTxt.setText("Email: " +  email);
-        }
-        String id = bundle.getString("id");
-        if (id != "" || id != null) {
-            idTxt.setText("User ID: " + id);
-        }
-        return rootView;
+
+
+        return mRootView;
     }
+
+
 }
