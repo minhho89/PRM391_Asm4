@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 intent.putExtras(b);
                                 startActivity(intent);
+                                finish();
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
