@@ -30,26 +30,41 @@ import com.squareup.picasso.Picasso;
  */
 public class ProfileFragment extends Fragment {
 
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
     View mRootView;
     ImageView mProfileImg;
     TextView mUserNameTxt;
     TextView mEmailTxt;
     TextView mIdTxt;
-
     private GoogleApiClient mGoogleApiClient;
     private GoogleSignInOptions mGso;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     public ProfileFragment() {
         // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ProfileFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static ProfileFragment newInstance(String param1, String param2) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -71,26 +86,6 @@ public class ProfileFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +105,6 @@ public class ProfileFragment extends Fragment {
 
 
         // Google
-
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         if (acct != null) {
             String personName = acct.getDisplayName();
@@ -123,32 +117,22 @@ public class ProfileFragment extends Fragment {
             mEmailTxt.setText("Email " + personEmail);
             mIdTxt.setText("User Id" + personId);
 
-
             Log.d("GOOGLE", "onCreateView: email: " + personEmail);
+
         } else {
-            // Facebook
             // Facebook
             Bundle bundle = this.getArguments();
 
             String imageURL = bundle.getString("imageURL");
-            if (imageURL != "" || imageURL != null) {
-                Picasso.get().load(imageURL).into(mProfileImg);
-
-            }
             String userName = bundle.getString("name");
-            if (userName != "" || userName != "") {
-                mUserNameTxt.setText(userName);
-            }
             String email = bundle.getString("email");
-            if (email != "" || email != null) {
-                mEmailTxt.setText("Email: " + email);
-            }
             String id = bundle.getString("id");
-            if (id != "" || id != null) {
-                mIdTxt.setText("User ID: " + id);
-            }
-        }
 
+            Picasso.get().load(imageURL).into(mProfileImg);
+            mUserNameTxt.setText(userName);
+            mEmailTxt.setText("Email: " + email);
+            mIdTxt.setText("User ID: " + id);
+        }
 
         return mRootView;
     }
