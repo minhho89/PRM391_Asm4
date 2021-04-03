@@ -1,7 +1,10 @@
 package funix.prm.prm391_asm4;
 
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,17 +20,18 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MoviesFragment extends Fragment {
@@ -78,18 +82,24 @@ public class MoviesFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
 
-        mMoviesList = new ArrayList<>();
-        mAdapter = new MoviesAdapter(getActivity(), mMoviesList);
         mRecyclerView = rootView.findViewById(R.id.recycler_view);
+        mMoviesList = new ArrayList<>();
+        fetchMoviesItem();
+
+        mAdapter = new MoviesAdapter(getContext(), mMoviesList);
+
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
+
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(),
+//                LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(8), true));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setNestedScrollingEnabled(false);
-
-        fetchMoviesItem();
 
 
         return rootView;
@@ -97,36 +107,85 @@ public class MoviesFragment extends Fragment {
     }
 
     private void fetchMoviesItem() {
-        JsonArrayRequest request = new JsonArrayRequest(URL,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (response == null) {
-                            Toast.makeText(getActivity(), "Couldn't fetch movies! Pleas try again.",
-                                    Toast.LENGTH_LONG).show();
-                            return;
-                        }
+        RequestQueue queue = Volley.newRequestQueue(getContext());
 
-                        List<Movies> movie = new Gson().fromJson(response.toString(),
-                                new TypeToken<List<Movies>>() {
-                                }.getType());
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                URL, null, new Response.Listener<JSONArray>() {
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    // creating a new json object and
+                    // getting each object from our json array.
+                    try {
+                        // we are getting each json object.
+                        JSONObject responseObj = response.getJSONObject(i);
 
-                        mMoviesList.clear();
-                        mMoviesList.addAll(movie);
-
-                        // update recyclerView
+                        // now we get our response from API in json object format.
+                        // in below line we are extracting a string with
+                        // its key value from our json object.
+                        // similarly we are extracting all the strings from our json object.
+                        String imgUrl = responseObj.getString("image");
+                        String title = responseObj.getString("title");
+                        String price = responseObj.getString("price");
+                        Movies movie = new Movies(imgUrl, title, price);
+                        Log.d("FetchMoviesItem", "onResponse: " + movie.toString());
+                        mMoviesList.add(movie);
                         mAdapter.notifyDataSetChanged();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // error in getting json
-                Log.e("FetchMoviesItem", "Error: " + error.getMessage());
-                Toast.makeText(getActivity(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Fail to get the data..", Toast.LENGTH_SHORT).show();
             }
         });
+        queue.add(jsonArrayRequest);
+    }
 
-        MainActivity.getInstance().addToRequestQueue(request);
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int spanCount;
+        private final int spacing;
+        private final boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
     }
 
 

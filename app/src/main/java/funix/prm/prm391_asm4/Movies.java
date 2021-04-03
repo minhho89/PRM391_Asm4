@@ -1,5 +1,7 @@
 package funix.prm.prm391_asm4;
 
+import androidx.annotation.NonNull;
+
 public class Movies {
     private String mImageLink;
     private String mMoviesName;
@@ -36,5 +38,15 @@ public class Movies {
 
     public void setmMoviePrice(String mMoviePrice) {
         this.mMoviePrice = mMoviePrice;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "ImageLink: " + mImageLink + "\n" +
+                "Movies Name: " + mMoviesName + "\n" +
+                "Movies Price: " + mMoviePrice + "\n";
+
+
     }
 }
