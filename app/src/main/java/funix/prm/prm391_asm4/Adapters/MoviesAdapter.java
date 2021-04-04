@@ -56,9 +56,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
         Movies movie = mMovieList.get(position);
 
-        String imageUrl = movie.getmImageLink();
-        String name = movie.getmMoviesName();
-        String price = movie.getmMoviePrice();
+        String imageUrl = movie.getImageLink();
+        String name = movie.getMoviesName();
+        String price = movie.getMoviePrice();
 
         holder.mMoviesName.setText(name);
         holder.mMoviesPrice.setText(price);
@@ -111,15 +111,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     }
 
-    private void sharePhotoFacebook(String imageUrl) {
-        Bitmap image = getBitmapFromURL(imageUrl);
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(image)
-                .build();
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .addPhoto(photo)
-                .build();
-    }
 
     private Bitmap getBitmapFromURL(String imageUrl) {
         Bitmap image = null;
@@ -139,7 +130,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             }
 
         }
-
         return image;
     }
 

@@ -50,11 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
-//        SharedPreferences sharedPref = getApplicationContext()
-//                .getSharedPreferences("Options", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//
-
         // Facebook
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
@@ -83,16 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                                 mImageUrl = "https://graph.facebook.com/"
                                         + AccessToken.getCurrentAccessToken().getUserId()
                                         + "/picture?width=400&height=400";
-
-
                                 mEmail = object.getString("email");
-                                Toast.makeText(getApplicationContext(), "Request " + object.toString(), Toast.LENGTH_SHORT).show();
-
-//                                editor.putString("id", mId);
-//
-//                                editor.putString("imageURL", mImageUrl);
-//                                editor.putString("name", mUserName);
-//                                editor.putString("email", mEmail);
 
                                 b.putString("id", mId);
                                 b.putString("imageURL", mImageUrl);
@@ -114,11 +100,7 @@ public class LoginActivity extends AppCompatActivity {
 
             request.setParameters(b);
             request.executeAsync();
-
-//            editor.commit();
         }
-
-
     }
 
     @Override
@@ -181,8 +163,5 @@ public class LoginActivity extends AppCompatActivity {
     private void googleSignIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
-
-
 }

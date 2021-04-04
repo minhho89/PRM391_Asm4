@@ -16,27 +16,27 @@ public class Movies {
         this.mMoviePrice = mMoviePrice;
     }
 
-    public String getmImageLink() {
+    public String getImageLink() {
         return mImageLink;
     }
 
-    public void setmImageLink(String mImageLink) {
+    public void setImageLink(String mImageLink) {
         this.mImageLink = mImageLink;
     }
 
-    public String getmMoviesName() {
+    public String getMoviesName() {
         return mMoviesName;
     }
 
-    public void setmMoviesName(String mMoviesName) {
+    public void setMoviesName(String mMoviesName) {
         this.mMoviesName = mMoviesName;
     }
 
-    public String getmMoviePrice() {
+    public String getMoviePrice() {
         return mMoviePrice;
     }
 
-    public void setmMoviePrice(String mMoviePrice) {
+    public void setMoviePrice(String mMoviePrice) {
         this.mMoviePrice = mMoviePrice;
     }
 
