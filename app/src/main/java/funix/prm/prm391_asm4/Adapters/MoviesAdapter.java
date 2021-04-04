@@ -97,7 +97,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                             ShareDialog shareDialog = new ShareDialog(mActivity);
                             shareDialog.show(content);
                         } else {
-                            Toast.makeText(mActivity, "Please sign in to your Facebook account first", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity,
+                                    "Please sign in to your Facebook account first",
+                                    Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -126,7 +128,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            //your codes here
             try {
 
                 URL url = new URL(imageUrl);
