@@ -1,8 +1,6 @@
 package funix.prm.prm391_asm4.Activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +20,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -44,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mUserName = "";
     private String mEmail = "";
     private static final int RC_SIGN_IN = 100;
-    private final String mLink = "";
+
     GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGgBtn;
 
@@ -53,10 +50,10 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
-        SharedPreferences sharedPref = getApplicationContext()
-                .getSharedPreferences("Options", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
+//        SharedPreferences sharedPref = getApplicationContext()
+//                .getSharedPreferences("Options", Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//
 
         // Facebook
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -90,17 +87,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                 mEmail = object.getString("email");
                                 Toast.makeText(getApplicationContext(), "Request " + object.toString(), Toast.LENGTH_SHORT).show();
-//                            mLink = object.getString("link");
-//                            Toast.makeText(getApplicationContext(), mLink, Toast.LENGTH_SHORT).show();
 
-                                editor.putString("id", mId);
-                                Log.d("demo", "onCompleted: " + mId);
-
-                                editor.putString("imageURL", mImageUrl);
-                                Log.d("demo", "onCompleted: url " + mImageUrl);
-                                editor.putString("name", mUserName);
-                                editor.putString("email", mEmail);
-
+//                                editor.putString("id", mId);
+//
+//                                editor.putString("imageURL", mImageUrl);
+//                                editor.putString("name", mUserName);
+//                                editor.putString("email", mEmail);
 
                                 b.putString("id", mId);
                                 b.putString("imageURL", mImageUrl);
@@ -123,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
             request.setParameters(b);
             request.executeAsync();
 
-            editor.commit();
+//            editor.commit();
         }
 
 
@@ -171,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         mGgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
