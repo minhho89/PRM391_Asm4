@@ -34,15 +34,15 @@ import funix.prm.prm391_asm4.Adapters.MoviesAdapter;
 import funix.prm.prm391_asm4.Models.Movies;
 import funix.prm.prm391_asm4.R;
 
-
+/**
+ * Handles showing movies in the form of grid items, using RecyclerView
+ */
 public class MoviesFragment extends Fragment {
 
     private static final String URL = "https://api.androidhive.info/json/movies_2017.json";
     private RecyclerView mRecyclerView;
     private MoviesAdapter mAdapter;
     private ArrayList<Movies> mMoviesList;
-    private RequestQueue mRequestQueue;
-
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -86,9 +86,11 @@ public class MoviesFragment extends Fragment {
         mMoviesList = new ArrayList<>();
         fetchMoviesItem();
 
+        // Adding the RecyclerView adapter
         mAdapter = new MoviesAdapter(getActivity(), getContext(), mMoviesList,
                 AccessToken.getCurrentAccessToken() != null);
 
+        // Set layout to gridLayout with 3 columns
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -97,6 +99,9 @@ public class MoviesFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Fetching movies item from JSON
+     */
     private void fetchMoviesItem() {
         RequestQueue queue = Volley.newRequestQueue(getContext());
 
