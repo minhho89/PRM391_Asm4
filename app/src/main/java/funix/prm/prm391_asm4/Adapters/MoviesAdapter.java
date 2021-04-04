@@ -1,4 +1,4 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,6 +26,9 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import funix.prm.prm391_asm4.Models.Movies;
+import funix.prm.prm391_asm4.R;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
     private final Activity mActivity;

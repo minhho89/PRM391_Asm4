@@ -1,4 +1,4 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Models;
 
 import androidx.annotation.NonNull;
 

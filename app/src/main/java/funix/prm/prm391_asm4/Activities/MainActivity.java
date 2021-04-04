@@ -1,4 +1,4 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +26,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import funix.prm.prm391_asm4.Fragments.MoviesFragment;
+import funix.prm.prm391_asm4.Fragments.ProfileFragment;
+import funix.prm.prm391_asm4.R;
 
 import static android.content.ContentValues.TAG;
 

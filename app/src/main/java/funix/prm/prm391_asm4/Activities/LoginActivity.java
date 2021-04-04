@@ -1,4 +1,4 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+
+import funix.prm.prm391_asm4.R;
 
 public class LoginActivity extends AppCompatActivity {
 

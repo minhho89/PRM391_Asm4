@@ -1,4 +1,4 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Fragments;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -32,6 +32,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import funix.prm.prm391_asm4.Adapters.MoviesAdapter;
+import funix.prm.prm391_asm4.Models.Movies;
+import funix.prm.prm391_asm4.R;
 
 
 public class MoviesFragment extends Fragment {

@@ -1,4 +1,4 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
+
+import funix.prm.prm391_asm4.R;
 
 /**
  * A simple {@link Fragment} subclass.
