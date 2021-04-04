@@ -4,18 +4,27 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
@@ -56,6 +65,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 .centerInside()
                 .into(holder.mMoviesImg);
 
+
         holder.mRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +76,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 builder.setNegativeButton(mActivity.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         dialogInterface.cancel();
                     }
                 });
@@ -75,9 +84,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Check if fb is login or not
                         if (mIsFacebookLoggedIn == true) {
-
+                            Bitmap image = getBitmapFromURL(imageUrl);
+                            SharePhoto photo = new SharePhoto.Builder()
+                                    .setBitmap(image)
+                                    .build();
+                            SharePhotoContent content = new SharePhotoContent.Builder()
+                                    .addPhoto(photo)
+                                    .build();
+                            ShareDialog shareDialog = new ShareDialog(mActivity);
+                            shareDialog.show(content);
+                        } else {
+                            Toast.makeText(mActivity, "Please sign in to your Facebook account first", Toast.LENGTH_SHORT).show();
                         }
-
 
                     }
                 });
@@ -86,7 +104,39 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             }
         });
 
+    }
 
+    private void sharePhotoFacebook(String imageUrl) {
+        Bitmap image = getBitmapFromURL(imageUrl);
+        SharePhoto photo = new SharePhoto.Builder()
+                .setBitmap(image)
+                .build();
+        SharePhotoContent content = new SharePhotoContent.Builder()
+                .addPhoto(photo)
+                .build();
+    }
+
+    private Bitmap getBitmapFromURL(String imageUrl) {
+        Bitmap image = null;
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+            try {
+
+                URL url = new URL(imageUrl);
+                image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+            } catch (IOException e) {
+                System.out.println(e);
+                Toast.makeText(mActivity, e + "", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        return image;
     }
 
 
@@ -112,4 +162,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
         }
     }
+
+
 }
