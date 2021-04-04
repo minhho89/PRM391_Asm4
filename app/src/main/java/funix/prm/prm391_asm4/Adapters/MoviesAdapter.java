@@ -30,12 +30,14 @@ import java.util.ArrayList;
 import funix.prm.prm391_asm4.Models.Movies;
 import funix.prm.prm391_asm4.R;
 
+/**
+ * Adapter for RecycleView showing movies grid in MovieFragment
+ */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
     private final Activity mActivity;
     private final Context mContext;
     private final ArrayList<Movies> mMovieList;
     private final boolean mIsFacebookLoggedIn;
-
 
     public MoviesAdapter(Activity activity, Context context, ArrayList<Movies> movieList, boolean isFacebookLoggedIn) {
         this.mActivity = activity;
@@ -69,6 +71,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 .into(holder.mMoviesImg);
 
 
+        // When user clicked to a grid movie item, the apps would prompt
+        // a dialog asking to share image to Facebook
         holder.mRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +91,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Check if fb is login or not
                         if (mIsFacebookLoggedIn == true) {
+                            // Initializes sharing dialog
                             Bitmap image = getBitmapFromURL(imageUrl);
                             SharePhoto photo = new SharePhoto.Builder()
                                     .setBitmap(image)
@@ -97,6 +102,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                             ShareDialog shareDialog = new ShareDialog(mActivity);
                             shareDialog.show(content);
                         } else {
+                            // TODO: set String value
                             Toast.makeText(mActivity,
                                     "Please sign in to your Facebook account first",
                                     Toast.LENGTH_SHORT).show();
@@ -111,7 +117,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     }
 
+    @Override
+    public int getItemCount() {
+        return mMovieList.size();
+    }
 
+    /**
+     * Converts an image from its URL to Bitmap object
+     * using for initializing Facebook sharing dialog
+     *
+     * @param imageUrl image URL
+     * @return Bitmap Object
+     */
     private Bitmap getBitmapFromURL(String imageUrl) {
         Bitmap image = null;
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
@@ -134,13 +151,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     }
 
 
-    @Override
-    public int getItemCount() {
-        return mMovieList.size();
-    }
-
-    public class MoviesViewHolder extends
-            RecyclerView.ViewHolder {
+    public class MoviesViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout mRootView;
         public ImageView mMoviesImg;
         public TextView mMoviesName;
