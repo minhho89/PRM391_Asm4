@@ -1,11 +1,16 @@
 package funix.prm.prm391_asm4;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,10 +20,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
+    private final Activity mActivity;
     private final Context mContext;
     private final ArrayList<Movies> mMovieList;
 
-    public MoviesAdapter(Context context, ArrayList<Movies> movieList) {
+
+    public MoviesAdapter(Activity activity, Context context, ArrayList<Movies> movieList) {
+        this.mActivity = activity;
         this.mContext = context;
         this.mMovieList = movieList;
     }
@@ -47,6 +55,31 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 .centerInside()
                 .into(holder.mMoviesImg);
 
+        holder.mRootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(mActivity.getResources().getString(R.string.facebook_share_dialog_text));
+                builder.setCancelable(true);
+                builder.setNegativeButton(mActivity.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        dialogInterface.cancel();
+                    }
+                });
+                builder.setPositiveButton(mActivity.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(mContext, "Hello", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
 
     }
 
@@ -58,7 +91,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     public class MoviesViewHolder extends
             RecyclerView.ViewHolder {
-
+        public LinearLayout mRootView;
         public ImageView mMoviesImg;
         public TextView mMoviesName;
         public TextView mMoviesPrice;
@@ -66,6 +99,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         public MoviesViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            mRootView = itemView.findViewById(R.id.item_linearlayout);
             mMoviesImg = itemView.findViewById(R.id.movies_img);
             mMoviesName = itemView.findViewById(R.id.movies_name);
             mMoviesPrice = itemView.findViewById(R.id.movies_price);

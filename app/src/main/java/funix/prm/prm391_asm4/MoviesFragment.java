@@ -16,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,7 +85,7 @@ public class MoviesFragment extends Fragment {
         mMoviesList = new ArrayList<>();
         fetchMoviesItem();
 
-        mAdapter = new MoviesAdapter(getContext(), mMoviesList);
+        mAdapter = new MoviesAdapter(getActivity(), getContext(), mMoviesList);
 
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
@@ -95,9 +94,6 @@ public class MoviesFragment extends Fragment {
 //                LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-
-        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(8), true));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setNestedScrollingEnabled(false);
 
