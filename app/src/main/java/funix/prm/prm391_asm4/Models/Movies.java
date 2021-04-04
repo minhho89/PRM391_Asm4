@@ -1,7 +1,10 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Models;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Defines Movies object
+ */
 public class Movies {
     private String mImageLink;
     private String mMoviesName;
@@ -16,27 +19,27 @@ public class Movies {
         this.mMoviePrice = mMoviePrice;
     }
 
-    public String getmImageLink() {
+    public String getImageLink() {
         return mImageLink;
     }
 
-    public void setmImageLink(String mImageLink) {
+    public void setImageLink(String mImageLink) {
         this.mImageLink = mImageLink;
     }
 
-    public String getmMoviesName() {
+    public String getMoviesName() {
         return mMoviesName;
     }
 
-    public void setmMoviesName(String mMoviesName) {
+    public void setMoviesName(String mMoviesName) {
         this.mMoviesName = mMoviesName;
     }
 
-    public String getmMoviePrice() {
+    public String getMoviePrice() {
         return mMoviePrice;
     }
 
-    public void setmMoviePrice(String mMoviePrice) {
+    public void setMoviePrice(String mMoviePrice) {
         this.mMoviePrice = mMoviePrice;
     }
 

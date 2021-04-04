@@ -1,10 +1,7 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Fragments;
 
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,15 +30,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import funix.prm.prm391_asm4.Adapters.MoviesAdapter;
+import funix.prm.prm391_asm4.Models.Movies;
+import funix.prm.prm391_asm4.R;
 
+/**
+ * Handles showing movies in the form of grid items, using RecyclerView
+ */
 public class MoviesFragment extends Fragment {
 
     private static final String URL = "https://api.androidhive.info/json/movies_2017.json";
     private RecyclerView mRecyclerView;
     private MoviesAdapter mAdapter;
     private ArrayList<Movies> mMoviesList;
-    private RequestQueue mRequestQueue;
-
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -73,7 +74,6 @@ public class MoviesFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    // Change title
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,24 +86,22 @@ public class MoviesFragment extends Fragment {
         mMoviesList = new ArrayList<>();
         fetchMoviesItem();
 
+        // Adding the RecyclerView adapter
         mAdapter = new MoviesAdapter(getActivity(), getContext(), mMoviesList,
                 AccessToken.getCurrentAccessToken() != null);
 
-
+        // Set layout to gridLayout with 3 columns
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
-
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(),
-//                LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setNestedScrollingEnabled(false);
 
-
         return rootView;
-
     }
 
+    /**
+     * Fetching movies item from JSON
+     */
     private void fetchMoviesItem() {
         RequestQueue queue = Volley.newRequestQueue(getContext());
 
@@ -112,15 +110,10 @@ public class MoviesFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
                     // creating a new json object and
-                    // getting each object from our json array.
+                    // getting each object from json array.
                     try {
-                        // we are getting each json object.
                         JSONObject responseObj = response.getJSONObject(i);
 
-                        // now we get our response from API in json object format.
-                        // in below line we are extracting a string with
-                        // its key value from our json object.
-                        // similarly we are extracting all the strings from our json object.
                         String imgUrl = responseObj.getString("image");
                         String title = responseObj.getString("title");
                         String price = responseObj.getString("price");
@@ -142,49 +135,5 @@ public class MoviesFragment extends Fragment {
         });
         queue.add(jsonArrayRequest);
     }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private final int spanCount;
-        private final int spacing;
-        private final boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
 
 }

@@ -1,10 +1,7 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -12,9 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -27,38 +22,48 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import static android.content.ContentValues.TAG;
+import funix.prm.prm391_asm4.Fragments.MoviesFragment;
+import funix.prm.prm391_asm4.Fragments.ProfileFragment;
+import funix.prm.prm391_asm4.R;
 
+/**
+ * Handles main thread of the application.
+ * Implements Navigation bar and its fragments activities
+ */
 public class MainActivity extends AppCompatActivity {
     private static MainActivity mInstance;
     private BottomNavigationView bottomNav;
-    private SharedPreferences mPref;
     private RequestQueue mRequestQueue;
 
     public static synchronized MainActivity getInstance() {
         return mInstance;
     }
 
-
+    /**
+     * Handles Navigation options selected event
+     */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment = null;
                     switch (item.getItemId()) {
+                        // Showing moveies fragment
                         case R.id.botNav_movies:
                             selectedFragment = new MoviesFragment();
                             break;
+
+                        // Showing profile fragment
                         case R.id.botNav_profile:
                             Intent intent = getIntent();
                             Bundle b = intent.getExtras();
 
                             selectedFragment = new ProfileFragment();
                             selectedFragment.setArguments(b);
-
                             break;
                     }
 
+                    // Change to selected fragment
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragment, selectedFragment)
@@ -77,18 +82,23 @@ public class MainActivity extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        mPref = getApplication().getSharedPreferences("Options", Context.MODE_PRIVATE);
+//        mPref = getApplication().getSharedPreferences("Options", Context.MODE_PRIVATE);
 
+        // Movie fragment loaded by default
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment,
                         new MoviesFragment())
                 .commit();
 
-
-
     }
 
+    /**
+     * Handles logout button on Appbar
+     *
+     * @param item logout button
+     * @return true if button clicked, otherwise false
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -102,8 +112,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Facebook log out event
+     */
     private void logoutFacebook() {
 
+        // Check if user have logged in or not
         if (AccessToken.getCurrentAccessToken() == null) {
             return; // already logged out
         }
@@ -123,22 +137,16 @@ public class MainActivity extends AppCompatActivity {
         }).executeAsync();
     }
 
-    public boolean isFacebookLoggedIn() {
-        return AccessToken.getCurrentAccessToken() != null;
-    }
-
-    private void moveToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
+    /**
+     * Google log out event
+     */
     private void logoutGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
+        // Check if google have logged or not
         if (GoogleSignIn.getClient(this, gso) != null) {
 
             GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -153,29 +161,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public RequestQueue getRequestQueue() {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        }
 
-        return mRequestQueue;
+    /**
+     * After logged out, moves back to log in activity
+     */
+    private void moveToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
-
-    public <T> void addToRequestQueue(Request<T> req, String tag) {
-        // set the default tag if tag is empty
-        req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
-        getRequestQueue().add(req);
-    }
-
-    public <T> void addToRequestQueue(Request<T> req) {
-        req.setTag(TAG);
-        getRequestQueue().add(req);
-    }
-
-    public void cancelPendingRequests(Object tag) {
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(tag);
-        }
-    }
-
 }

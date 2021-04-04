@@ -1,8 +1,6 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +20,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -33,6 +30,12 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import funix.prm.prm391_asm4.R;
+
+/**
+ * Handles all activity related to loging in Facebook and Google.
+ * After successfully logged in, the activity will be move to MainActivity.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private LoginButton mFbBtn;
@@ -42,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mUserName = "";
     private String mEmail = "";
     private static final int RC_SIGN_IN = 100;
-    private final String mLink = "";
+
     GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGgBtn;
 
@@ -51,16 +54,11 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
-        SharedPreferences sharedPref = getApplicationContext()
-                .getSharedPreferences("Options", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-
-        // Facebook
+        // Prepare intent for moving to MainActivity
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
+        // Google sign in
         if (requestCode == RC_SIGN_IN) {
-            // Google
             GoogleSignInResult result = Auth.GoogleSignInApi
                     .getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -70,9 +68,10 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Google Log in failed", Toast.LENGTH_SHORT).show();
             }
         } else {
-            // Facebook
+            // Facebook sign in
             Bundle b = new Bundle();
 
+            // Retrieves information from Facebook
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -84,21 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                                 mImageUrl = "https://graph.facebook.com/"
                                         + AccessToken.getCurrentAccessToken().getUserId()
                                         + "/picture?width=400&height=400";
-
-
                                 mEmail = object.getString("email");
-                                Toast.makeText(getApplicationContext(), "Request " + object.toString(), Toast.LENGTH_SHORT).show();
-//                            mLink = object.getString("link");
-//                            Toast.makeText(getApplicationContext(), mLink, Toast.LENGTH_SHORT).show();
-
-                                editor.putString("id", mId);
-                                Log.d("demo", "onCompleted: " + mId);
-
-                                editor.putString("imageURL", mImageUrl);
-                                Log.d("demo", "onCompleted: url " + mImageUrl);
-                                editor.putString("name", mUserName);
-                                editor.putString("email", mEmail);
-
 
                                 b.putString("id", mId);
                                 b.putString("imageURL", mImageUrl);
@@ -120,11 +105,7 @@ public class LoginActivity extends AppCompatActivity {
 
             request.setParameters(b);
             request.executeAsync();
-
-            editor.commit();
         }
-
-
     }
 
     @Override
@@ -137,9 +118,8 @@ public class LoginActivity extends AppCompatActivity {
         mGgBtn = findViewById(R.id.g_login);
         mCallbackManager = CallbackManager.Factory.create();
 
-        // Facebook
+        // Facebook Login
         mFbBtn.setPermissions(Arrays.asList("public_profile", "email"));
-
 
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -169,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         mGgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,8 +167,5 @@ public class LoginActivity extends AppCompatActivity {
     private void googleSignIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
-
-
 }

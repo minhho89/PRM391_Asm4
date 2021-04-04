@@ -1,4 +1,4 @@
-package funix.prm.prm391_asm4;
+package funix.prm.prm391_asm4.Adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,12 +27,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import funix.prm.prm391_asm4.Models.Movies;
+import funix.prm.prm391_asm4.R;
+
+/**
+ * Adapter for RecycleView showing movies grid in MovieFragment
+ */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
     private final Activity mActivity;
     private final Context mContext;
     private final ArrayList<Movies> mMovieList;
     private final boolean mIsFacebookLoggedIn;
-
 
     public MoviesAdapter(Activity activity, Context context, ArrayList<Movies> movieList, boolean isFacebookLoggedIn) {
         this.mActivity = activity;
@@ -53,9 +58,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
         Movies movie = mMovieList.get(position);
 
-        String imageUrl = movie.getmImageLink();
-        String name = movie.getmMoviesName();
-        String price = movie.getmMoviePrice();
+        String imageUrl = movie.getImageLink();
+        String name = movie.getMoviesName();
+        String price = movie.getMoviePrice();
 
         holder.mMoviesName.setText(name);
         holder.mMoviesPrice.setText(price);
@@ -66,6 +71,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 .into(holder.mMoviesImg);
 
 
+        // When user clicked to a grid movie item, the apps would prompt
+        // a dialog asking to share image to Facebook
         holder.mRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +91,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Check if fb is login or not
                         if (mIsFacebookLoggedIn == true) {
+                            // Initializes sharing dialog
                             Bitmap image = getBitmapFromURL(imageUrl);
                             SharePhoto photo = new SharePhoto.Builder()
                                     .setBitmap(image)
@@ -94,7 +102,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                             ShareDialog shareDialog = new ShareDialog(mActivity);
                             shareDialog.show(content);
                         } else {
-                            Toast.makeText(mActivity, "Please sign in to your Facebook account first", Toast.LENGTH_SHORT).show();
+                            // TODO: set String value
+                            Toast.makeText(mActivity,
+                                    "Please sign in to your Facebook account first",
+                                    Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -106,16 +117,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     }
 
-    private void sharePhotoFacebook(String imageUrl) {
-        Bitmap image = getBitmapFromURL(imageUrl);
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(image)
-                .build();
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .addPhoto(photo)
-                .build();
+    @Override
+    public int getItemCount() {
+        return mMovieList.size();
     }
 
+    /**
+     * Converts an image from its URL to Bitmap object
+     * using for initializing Facebook sharing dialog
+     *
+     * @param imageUrl image URL
+     * @return Bitmap Object
+     */
     private Bitmap getBitmapFromURL(String imageUrl) {
         Bitmap image = null;
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
@@ -123,7 +136,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            //your codes here
             try {
 
                 URL url = new URL(imageUrl);
@@ -135,18 +147,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             }
 
         }
-
         return image;
     }
 
 
-    @Override
-    public int getItemCount() {
-        return mMovieList.size();
-    }
-
-    public class MoviesViewHolder extends
-            RecyclerView.ViewHolder {
+    public class MoviesViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout mRootView;
         public ImageView mMoviesImg;
         public TextView mMoviesName;
