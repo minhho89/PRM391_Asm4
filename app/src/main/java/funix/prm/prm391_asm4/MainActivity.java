@@ -123,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
         }).executeAsync();
     }
 
+    public boolean isFacebookLoggedIn() {
+        return AccessToken.getCurrentAccessToken() != null;
+    }
+
     private void moveToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

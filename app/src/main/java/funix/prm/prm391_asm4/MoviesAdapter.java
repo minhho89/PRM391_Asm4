@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +22,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     private final Activity mActivity;
     private final Context mContext;
     private final ArrayList<Movies> mMovieList;
+    private final boolean mIsFacebookLoggedIn;
 
 
-    public MoviesAdapter(Activity activity, Context context, ArrayList<Movies> movieList) {
+    public MoviesAdapter(Activity activity, Context context, ArrayList<Movies> movieList, boolean isFacebookLoggedIn) {
         this.mActivity = activity;
         this.mContext = context;
         this.mMovieList = movieList;
+        this.mIsFacebookLoggedIn = isFacebookLoggedIn;
     }
 
     @NonNull
@@ -72,7 +73,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                 builder.setPositiveButton(mActivity.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(mContext, "Hello", Toast.LENGTH_SHORT).show();
+                        // Check if fb is login or not
+                        if (mIsFacebookLoggedIn == true) {
+
+                        }
+
+
                     }
                 });
                 AlertDialog alertDialog = builder.create();

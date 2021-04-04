@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,7 +86,8 @@ public class MoviesFragment extends Fragment {
         mMoviesList = new ArrayList<>();
         fetchMoviesItem();
 
-        mAdapter = new MoviesAdapter(getActivity(), getContext(), mMoviesList);
+        mAdapter = new MoviesAdapter(getActivity(), getContext(), mMoviesList,
+                AccessToken.getCurrentAccessToken() != null);
 
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
