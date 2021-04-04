@@ -23,7 +23,9 @@ import com.squareup.picasso.Picasso;
 
 import funix.prm.prm391_asm4.R;
 
-
+/**
+ * Handles showing user's information
+ */
 public class ProfileFragment extends Fragment {
 
     private View mRootView;
@@ -59,7 +61,6 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -72,7 +73,7 @@ public class ProfileFragment extends Fragment {
         mEmailTxt = mRootView.findViewById(R.id.profile_email_txt);
         mIdTxt = mRootView.findViewById(R.id.profile_id_txt);
 
-        // Google
+        // Retrieves Google profile data
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         if (acct != null) {
             String personName = acct.getDisplayName();
@@ -88,7 +89,7 @@ public class ProfileFragment extends Fragment {
             Log.d("GOOGLE", "onCreateView: email: " + personEmail);
 
         } else {
-            // Facebook
+            // Get Facebook profile data from saved bundle
             Bundle bundle = this.getArguments();
 
             String imageURL = bundle.getString("imageURL");
