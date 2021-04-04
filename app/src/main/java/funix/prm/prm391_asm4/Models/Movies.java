@@ -2,6 +2,9 @@ package funix.prm.prm391_asm4.Models;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Defines Movies object
+ */
 public class Movies {
     private String mImageLink;
     private String mMoviesName;
