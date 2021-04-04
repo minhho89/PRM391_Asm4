@@ -48,12 +48,9 @@
                 android:layout_below="@+id/header_cover_image"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="-1dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="0dp"
-                android:background="#673AB7"
+                android:background="@color/purple_500"
                 android:elevation="4dp"
-                android:paddingBottom="24dp"
+                android:paddingBottom="@dimen/md"
                 >
 
 
@@ -62,9 +59,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="100dp"
+                    android:layout_marginTop="@dimen/gg_btn_marginTop"
                     android:textColor="#fff"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/profile_text_size"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -82,24 +79,25 @@
                     android:id="@+id/profile_id_txt"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_margin="@dimen/sm_md"
+                    android:layout_marginTop="@dimen/sm"
+                    android:layout_marginBottom="@dimen/sm"
                     android:background="#fff"
+                    android:elevation="@dimen/elevation_standard"
                     android:clickable="true"
-                    android:elevation="4dp"
-                    android:padding="20dp" />
+                    android:padding="@dimen/md"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/profile_email_txt"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_margin="@dimen/sm_md"
                     android:background="#fff"
                     android:clickable="true"
-                    android:elevation="4dp"
-                    android:padding="20dp"
-                    />
+                    android:elevation="@dimen/elevation_standard"
+                    android:padding="@dimen/md"
+                    android:textColor="@color/black" />
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
