@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="sm">3dp</dimen>
+    <dimen name="sm_md">5dp</dimen>
+    <dimen name="md">20dp</dimen>
+
+    <dimen name="fb_btn_marginTop">232dp</dimen>
+    <dimen name="gg_btn_marginTop">100dp</dimen>
+    <dimen name="gg_btn_marginBottom">217dp</dimen>
+    <dimen name="profile_photo_height">217dp</dimen>
+    <dimen name="profile_photo_border">3dp</dimen>
+    <dimen name="profile_photo_circle_size">200dp</dimen>
+    <dimen name="profile_photo_marginTop">-100dp</dimen>
+    <dimen name="elevation_standard">5dp</dimen>
+    <dimen name="profile_text_size">24sp</dimen>
+
+    <dimen name="movie_img_height">120dp</dimen>
+    <dimen name="movie_text_size">10sp</dimen>
+
 </resources>

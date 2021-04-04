@@ -13,9 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="232dp"
+        android:layout_marginTop="@dimen/fb_btn_marginTop"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +25,7 @@
         android:layout_below="@id/fb_login_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="217dp" />
+        android:layout_marginTop="@dimen/gg_btn_marginTop"
+        android:layout_marginBottom="@dimen/gg_btn_marginBottom" />
 
 </RelativeLayout>

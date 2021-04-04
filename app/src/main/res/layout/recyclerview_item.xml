@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_margin="3dp"
-        android:elevation="3dp"
+        android:layout_margin="@dimen/sm"
+        android:elevation="@dimen/elevation_standard"
         android:foreground="?attr/selectableItemBackground"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardCornerRadius="@dimen/sm">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             <ImageView
                 android:id="@+id/movies_img"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="@dimen/movie_img_height"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_movies_film" />
@@ -34,9 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/movies_img"
                 android:lines="2"
-                android:padding="3dp"
-                android:text="Movies Name"
-                android:textSize="10sp" />
+                android:padding="@dimen/sm"
+                android:textSize="@dimen/movie_text_size" />
 
             <TextView
                 android:id="@+id/movies_price"
@@ -45,9 +44,8 @@
                 android:layout_below="@id/movies_name"
                 android:gravity="right"
                 android:padding="3dp"
-                android:text="$0.0"
-                android:textColor="@color/purple_700"
-                android:textSize="10sp" />
+                android:textColor="@color/pink"
+                android:textSize="@dimen/movie_text_size" />
 
 
         </RelativeLayout>
