@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -11,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -23,14 +27,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import static android.content.ContentValues.TAG;
+
 public class MainActivity extends AppCompatActivity {
-    BottomNavigationView bottomNav;
-    Intent receiveIntent;
-    String mImageUrl;
-    String mUserName;
-    String mLink;
-    String mEmail;
-    SharedPreferences mPref;
+    private static MainActivity mInstance;
+    private BottomNavigationView bottomNav;
+    private SharedPreferences mPref;
+    private RequestQueue mRequestQueue;
+
+    public static synchronized MainActivity getInstance() {
+        return mInstance;
+    }
+
 
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -64,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mInstance = this;
 
         bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -76,9 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         new MoviesFragment())
                 .commit();
 
-        // Facebook
 
-        // Google
 
     }
 
@@ -139,6 +146,31 @@ public class MainActivity extends AppCompatActivity {
                             moveToLoginActivity();
                         }
                     });
+        }
+    }
+
+    public RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        }
+
+        return mRequestQueue;
+    }
+
+    public <T> void addToRequestQueue(Request<T> req, String tag) {
+        // set the default tag if tag is empty
+        req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
+        getRequestQueue().add(req);
+    }
+
+    public <T> void addToRequestQueue(Request<T> req) {
+        req.setTag(TAG);
+        getRequestQueue().add(req);
+    }
+
+    public void cancelPendingRequests(Object tag) {
+        if (mRequestQueue != null) {
+            mRequestQueue.cancelAll(tag);
         }
     }
 
