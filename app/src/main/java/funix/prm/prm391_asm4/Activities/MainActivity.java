@@ -1,8 +1,6 @@
 package funix.prm.prm391_asm4.Activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,36 +27,44 @@ import funix.prm.prm391_asm4.Fragments.MoviesFragment;
 import funix.prm.prm391_asm4.Fragments.ProfileFragment;
 import funix.prm.prm391_asm4.R;
 
+/**
+ * Handles main thread of the application.
+ * Implements Navigation bar and its fragments activities
+ */
 public class MainActivity extends AppCompatActivity {
     private static MainActivity mInstance;
     private BottomNavigationView bottomNav;
-    private SharedPreferences mPref;
     private RequestQueue mRequestQueue;
 
     public static synchronized MainActivity getInstance() {
         return mInstance;
     }
 
-
+    /**
+     * Handles Navigation options selected event
+     */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment = null;
                     switch (item.getItemId()) {
+                        // Showing moveies fragment
                         case R.id.botNav_movies:
                             selectedFragment = new MoviesFragment();
                             break;
+
+                        // Showing profile fragment
                         case R.id.botNav_profile:
                             Intent intent = getIntent();
                             Bundle b = intent.getExtras();
 
                             selectedFragment = new ProfileFragment();
                             selectedFragment.setArguments(b);
-
                             break;
                     }
 
+                    // Change to selected fragment
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragment, selectedFragment)
@@ -77,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        mPref = getApplication().getSharedPreferences("Options", Context.MODE_PRIVATE);
+//        mPref = getApplication().getSharedPreferences("Options", Context.MODE_PRIVATE);
 
+        // Movie fragment loaded by default
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment,
@@ -87,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Handles logout button on Appbar
+     *
+     * @param item logout button
+     * @return true if button clicked, otherwise false
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -100,8 +113,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Facebook log out event
+     */
     private void logoutFacebook() {
 
+        // Check if user have logged in or not
         if (AccessToken.getCurrentAccessToken() == null) {
             return; // already logged out
         }
@@ -121,19 +138,16 @@ public class MainActivity extends AppCompatActivity {
         }).executeAsync();
     }
 
-
-    private void moveToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
+    /**
+     * Google log out event
+     */
     private void logoutGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
+        // Check if google have logged or not
         if (GoogleSignIn.getClient(this, gso) != null) {
 
             GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -147,6 +161,17 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
     }
+
+
+    /**
+     * After logged out, moves back to log in activity
+     */
+    private void moveToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {

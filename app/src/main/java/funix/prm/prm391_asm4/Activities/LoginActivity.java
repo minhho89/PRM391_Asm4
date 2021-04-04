@@ -32,6 +32,10 @@ import java.util.Arrays;
 
 import funix.prm.prm391_asm4.R;
 
+/**
+ * Handles all activity related to loging in Facebook and Google.
+ * After successfully logged in, the activity will be move to MainActivity.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private LoginButton mFbBtn;
@@ -50,11 +54,11 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Facebook
+        // Prepare intent for moving to MainActivity
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
+        // Google sign in
         if (requestCode == RC_SIGN_IN) {
-            // Google
             GoogleSignInResult result = Auth.GoogleSignInApi
                     .getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -64,9 +68,10 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Google Log in failed", Toast.LENGTH_SHORT).show();
             }
         } else {
-            // Facebook
+            // Facebook sign in
             Bundle b = new Bundle();
 
+            // Retrieves information from Facebook
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -113,9 +118,8 @@ public class LoginActivity extends AppCompatActivity {
         mGgBtn = findViewById(R.id.g_login);
         mCallbackManager = CallbackManager.Factory.create();
 
-        // Facebook
+        // Facebook Login
         mFbBtn.setPermissions(Arrays.asList("public_profile", "email"));
-
 
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
